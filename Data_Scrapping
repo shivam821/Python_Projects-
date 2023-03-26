@@ -1,0 +1,41 @@
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
+
+url = "https://webscraper.io/test-sites/tables"
+html_code = urlopen(url).read().decode("utf-8")
+
+soup = BeautifulSoup(html_code,'lxml')
+
+headings_2 = soup.find_all("img")
+print(headings_2[1]['src'])
+print(headings_2[1]['alt'])
+
+fist_table = soup.find('table')
+table_rows = fist_table.find_all('tr')[1:]
+
+last_name = []
+for i in table_rows:
+    last_name.append(i.findAll('td')[2].get_text())
+print(last_name)
+
+url = "https://en.wikipedia.org/wiki/Python_(programming_language)"
+html_code = urlopen(url).read().decode("utf-8")
+
+soup = BeautifulSoup(html_code,'lxml')
+
+type_table = soup.find(class_ = "wikitable")
+table_body = type_table.find("tdbody")
+rows = table_body.find_all("tr")[1:]
+
+mutable_types = []
+immutable_types = []
+
+for i in rows :
+    data = i.find_all("td")
+    if data[1].get_text() == "mutable\n":
+        mutable_types.append(data[0].get_text())
+    else:
+        immutable_types.append(data[0].get_text())
+
+print("Mutable Types : {mutable_types}")
+print("Immutable Types : {immutable_types}")
